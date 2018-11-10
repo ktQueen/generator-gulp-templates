@@ -52,7 +52,7 @@ module.exports = yeoman.generators.Base.extend({
                 name: 'projectAuthor',
                 message: '项目开发者',
                 store: true,   // 记住用户的选择
-                default: 'huangxiaoyan'
+                default: ''
             },{
                 type: 'input',
                 name: 'projectVersion',
