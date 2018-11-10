@@ -4,7 +4,8 @@
   "description": "基于gulp的脚手架",
   "main": "index.js",
   "scripts": {
-    "dev": "gulp dev"
+    "dev": "gulp dev",
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",

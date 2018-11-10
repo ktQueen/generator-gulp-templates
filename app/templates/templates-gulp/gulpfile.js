@@ -153,5 +153,9 @@ gulp.task('server',function(){
 //编译,清空 /dist 文件夹，将 html、编译后的css、编译后的js、图片引入
 // [] 中任务是并行的，其他按照先后顺序执行
 gulp.task('dev', (cb) => {
+    runSequence(['server'],cb);
+});
+
+gulp.task('test', (cb) => {
     runSequence('del', 'page', 'sprite','style','image','script',['server'],cb);
 });
