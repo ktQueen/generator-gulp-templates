@@ -1,0 +1,22 @@
+#本地安装node.js和npm,全局安装gulp
+#$ npm install -g gulp
+
+#项目安装gulp
+#$ npm install --save-dev gulp
+
+#安装:
+#npm install
+
+#本地开发:
+#运行 npm run dev
+
+
+#1.gulp对于es6的语法的压缩是有问题的
+
+#2.gulp-changed插件对于fileinclude引入的文件不触发编译
+
+#3.gulper在window下不能运行，在Mac下修改gulpfile.js自动重启都会新打开一个新页面
+
+#4.删除文件不触发编译
+
+#5.各个环境打包配置
