@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "files": [
+    "app"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +13,9 @@
     "type": "git",
     "url": "git+https://github.com/ktQueen/generator-templates-gulp.git"
   },
+  "keywords": [
+    "yeoman-generator"
+  ],
   "author": "kt",
   "license": "ISC",
   "bugs": {
@@ -17,7 +23,8 @@
   },
   "homepage": "https://github.com/ktQueen/generator-templates-gulp#readme",
   "dependencies": {
-    "del": "^3.0.0",
-    "yeoman-generator": "^3.1.1"
+    "yeoman-generator": "^3.1.1",
+    "chalk": "^2.1.0",
+    "yosay": "^2.0.1"
   }
 }
