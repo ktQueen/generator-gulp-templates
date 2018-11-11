@@ -1,7 +1,7 @@
 {
   "name": "generator-templates-gulp",
   "version": "1.0.0",
-  "description": "",
+  "description": "gulp脚手架模版构造器",
   "main": "index.js",
   "files": [
     "app"

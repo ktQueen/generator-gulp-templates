@@ -1,18 +1,23 @@
 {
-  "name": "base-gulp",
+  "name": "<%= name %>",
+  "description": "<%= description %>",
   "version": "1.0.0",
-  "description": "基于gulp的脚手架",
   "main": "index.js",
+  "files": [],
   "scripts": {
     "dev": "gulp dev",
-    "test": "gulp test"
+    "test-build": "gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ktQueen/base-gulp.git"
+    "url": "<%= repository %>"
   },
-  "author": "kt",
-  "license": "ISC",
+  "keywords": [],
+  "author": {
+    "name": "<%= author %>",
+    "email": "<%= email %>"
+  },
+  "license": "<%= license %>",
   "dependencies": {
     "browser-sync": "^2.26.3",
     "del": "^3.0.0",
@@ -21,7 +26,6 @@
     "gulp-clean-css": "^3.10.0",
     "gulp-notify": "^3.2.0",
     "gulp-util": "^3.0.8",
-    "inquirer": "^6.2.0",
     "run-sequence": "^2.2.1"
   },
   "devDependencies": {

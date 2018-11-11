@@ -1,0 +1,8 @@
+
+#修改代码后进行npm link
+
+#在新的项目的上一级文件夹下执行yo 选择templates-gulp
+
+generator的name 必须以generator-开始
+package.json文件keywords 属性必须包含 "yeoman-generator"
+用npm link 发布之后 需要yo name(这个name是没有generator-开头的那个)

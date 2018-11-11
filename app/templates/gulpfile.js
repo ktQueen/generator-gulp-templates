@@ -4,7 +4,7 @@ var gulp = require('gulp'), // gulp模块
     sass = require("gulp-sass"), //sass的编译
     autoprefixer = require("gulp-autoprefixer"), //css 浏览器前缀补全
     cleanCss = require('gulp-clean-css'); // 压缩 css
-    uglify = require("gulp-uglify"), // js文件压缩
+uglify = require("gulp-uglify"), // js文件压缩
     imagemin = require('gulp-imagemin'),//压缩图片
     // imageminJpegRecompress = require('imagemin-jpeg-recompress'),//处理图片
     cache = require('gulp-cache'), // 图片缓存，图片替换了才压缩
@@ -153,7 +153,7 @@ gulp.task('server',function(){
 //编译,清空 /dist 文件夹，将 html、编译后的css、编译后的js、图片引入
 // [] 中任务是并行的，其他按照先后顺序执行
 gulp.task('dev', (cb) => {
-    runSequence(['server'],cb);
+    runSequence('del', 'page', 'sprite','style','image','script',['server'],cb);
 });
 
 gulp.task('test', (cb) => {
