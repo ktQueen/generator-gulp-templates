@@ -1,3 +1,5 @@
+#进入当前项目目录
+
 #本地安装node.js和npm,全局安装gulp
 #$ npm install -g gulp
 
