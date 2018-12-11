@@ -14,20 +14,15 @@ var gulp = require('gulp'), // gulp模块
     runSequence = require('run-sequence'), // 设定同步异步执行任务
     browserSync = require('browser-sync').create(), //自动刷新
     reload = browserSync.reload,
-    fs = require("fs"),
-    // js使用require加载
-    browserify = require('browserify');
-    source = require('vinyl-source-stream'), //将Browserify的bundle()的输出转换为Gulp可用的一种虚拟文件格式流
-    streamify = require('gulp-streamify'),  //只支持 buffer 的插件直接处理 stream
-    glob = require('glob'),
-    es = require('event-stream');
+    fs = require("fs");
 
+var config = require('./config.js');
 
 // 配置
 var options={
     del:'./dist/**/*',// 删除文件
     index:'demo.html', // 文件入口
-    port:8081, // 端口
+    port:8080, // 端口
     dist:'./dist/**/*.*',// 监听编译生成的文件夹所有文件
 };
 
@@ -56,16 +51,31 @@ gulp.task('del', (cb) => {
 });
 
 // page任务
-gulp.task('page', function() {  //编译html文件
+gulp.task('pageDev', function() {
+    return page(config.dev.env);
+});
+gulp.task('pageTest', function() {
+    return page(config.test.env);
+});
+gulp.task('pageBox', function() {
+    return page(config.box.env);
+});
+gulp.task('pageOnline', function() {
+    return page(config.online.env);
+});
+function page(env){//编译html文件
     return gulp.src([paths.src_html])
         .pipe(fileinclude({
             prefix: '@@', // 变量前缀
             basepath: '@file', // 引用文件路径
+            context: {
+                env,
+            },
         }))
         .pipe(gulp.dest(paths.dist))//输出到指定文件夹
         .pipe(notify({ message: 'page is OK' }))//提醒任务完成
         .pipe(reload({stream: true}));
-});
+}
 
 //雪碧图
 gulp.task('sprite',function(){
@@ -123,34 +133,35 @@ gulp.task('image',function(){
 });
 
 //script任务
-gulp.task('script',function(done){
-    glob(paths.src_js, function(err, files) {
-        if(err) done(err);
-        var tasks = files.map(function(entry) {
-            var b=browserify({ entries: [entry] })
-                .bundle()
-                .pipe(source(entry.replace(paths.src_js_replace,'')))
-                .pipe(streamify(uglify({
-                    mangle: true, // 类型：Boolean 默认：true 是否修改变量名
-                    compress: true, // 类型：Boolean 默认：true 是否完全压缩
-                    ie8: true,
-                })))  //使用uglify进行压缩
-                .on('error', function (err) {
-                    util.log(util.colors.red('[Error]'), err.toString());
-                });
-            if(entry.indexOf(paths.src_js_del)=== -1){
-                b.pipe(gulp.dest(paths.dist_js)) //输出到指定文件夹
-            }
-            b.pipe(notify({ message: 'script is OK' })) //提醒任务完成
-                .pipe(reload({stream: true}));
-            return b;
-        });
-        es.merge(tasks).on('end', done);
-    });
+gulp.task('script',function(){
+    return gulp.src([paths.src_js])
+        .pipe(uglify({
+            mangle: true, // 类型：Boolean 默认：true 是否修改变量名
+            compress: true, // 类型：Boolean 默认：true 是否完全压缩
+            ie8: true,
+        }))  //使用uglify进行压缩
+        .on('error', function (err) {
+            util.log(util.colors.red('[Error]'), err.toString());
+        })
+        .pipe(gulp.dest(paths.dist_js)) //输出到指定文件夹
+        .pipe(notify({ message: 'script is OK' })) //提醒任务完成
+        .pipe(reload({stream: true}));
 });
 
 //静态服务器
-gulp.task('server',function(){
+gulp.task('serverDev', function() {
+    return server(config.dev.env);
+});
+gulp.task('serverTest', function() {
+    return server(config.test.env);
+});
+gulp.task('serverBox', function() {
+    return server(config.box.env);
+});
+gulp.task('serverOnline', function() {
+    return server(config.online.env);
+});
+function server(env){
     browserSync.init({      // 启动Browsersync服务
         server: {
             baseDir: paths.dist, //这里指的是根目录，如果你的index.html在根目录下，会直接打开index页面，不然会显示Get Not，自己写路径就行
@@ -160,22 +171,32 @@ gulp.task('server',function(){
         open: 'external',   // 决定Browsersync启动时自动打开的网址 external 表示 可外部打开 url, 可以在同一 wifi 下不同终端测试
         injectChanges: true // 注入CSS改变
     });
-
+    env = env.substring(0,1).toUpperCase()+env.substring(1);
     // 监听文件变化，执行相应任务
-    gulp.watch([paths.src_all_html],['page']);
+    gulp.watch([paths.src_all_html],['page'+env]);
     gulp.watch([paths.src_sprite_img],['sprite']);
     gulp.watch([paths.src_all_scss],['style']);
     gulp.watch([paths.src_img],['image']);
     gulp.watch([paths.src_js],['script']);
     gulp.watch([options.dist]).on('change',reload);
-});
+}
+
 
 //编译,清空 /dist 文件夹，将 html、编译后的css、编译后的js、图片引入
 // [] 中任务是并行的，其他按照先后顺序执行
+// 开发环境
 gulp.task('dev', (cb) => {
-    runSequence('del', 'page', 'sprite','style','image','script',['server'],cb);
+    runSequence('del', 'pageDev', 'sprite','style','image','script',['serverDev'],cb);
 });
-
+// 测试环境
 gulp.task('test', (cb) => {
-    runSequence('del', 'page', 'sprite','style','image','script',['server'],cb);
+    runSequence('del', 'pageTest', 'sprite','style','image','script',['serverTest'],cb);
+});
+// 沙箱
+gulp.task('box', (cb) => {
+    runSequence('del', 'pageBox', 'sprite','style','image','script',['serverBox'],cb);
+});
+// 线上环境
+gulp.task('online', (cb) => {
+    runSequence('del', 'pageOnline', 'sprite','style','image','script',['serverOnline'],cb);
 });
