@@ -87,6 +87,10 @@ module.exports=class extends Generator {
             this.templatePath('gulpfile.js'),
             this.destinationPath('gulpfile.js')
         );
+        this.fs.copy(
+            this.templatePath('config.js'),
+            this.destinationPath('config.js')
+        );
         this._writingPackageJSON();
         this._writingREADME();
         this._writingGitignore();
